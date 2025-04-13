@@ -5,33 +5,34 @@ import requests
 import os
 from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
+from vienna_folding import get_vienna_dG
 
-# ✅ Streamlit must start with set_page_config
+# ✅ Must be first Streamlit command
 st.set_page_config(page_title="tRNative tRNA Engine", layout="wide")
-
-# ✅ Debug file list
 st.write("📁 Files in repo:", os.listdir())
 
-# Load model
+# ✅ Load ML model
 try:
     model = joblib.load("tRNA_structure_model.pkl")
 except Exception as e:
     st.error("❌ Failed to load ML model. Make sure 'tRNA_structure_model.pkl' is in your repo.")
     st.stop()
 
+# ✅ Supported amino acids
 supported_aas = [
     "Gln", "Arg", "Lys", "Asn", "Glu", "Asp", "Tyr", "Cys", "Trp",
     "Ser", "Leu", "Gly", "Ala", "Val", "Ile", "Thr", "Phe", "Pro", "Met", "His"
 ]
 
+# ✅ User Inputs
 st.title("🔬 tRNative - Suppressor tRNA Prediction Engine")
-
 st.header("🧬 Mutation Details")
 gene = st.text_input("Gene (optional)")
 mutation_pos = st.text_input("Nonsense Mutation Position (e.g., G542X)")
 stop_codon = st.selectbox("Stop Codon Introduced", ["UAA", "UAG", "UGA"])
 target_aa = st.selectbox("Amino Acid to Restore", supported_aas)
 
+# ✅ Utility functions
 def off_target_risk(seq, stop_codon):
     count = seq.count(stop_codon.replace("U", "T"))
     penalty = 0.005 * seq.count("TGA")
@@ -45,6 +46,7 @@ def mock_3d_match_score(seq):
 def get_rnacomposer_link(seq):
     return f"https://rnacomposer.cs.put.poznan.pl/#sequence={seq}"
 
+# ✅ Load and process tRNAs
 if target_aa:
     st.markdown("---")
     st.header(f"🧾 Natural Human tRNAs for {target_aa} (from GtRNAdb)")
@@ -59,7 +61,7 @@ if target_aa:
     if len(tRNAs) > 0:
         st.write(tRNAs[:2])
     else:
-        st.warning("⚠️ No tRNAs loaded. Check FASTA file or anticodon match logic.")
+        st.warning("⚠️ No tRNAs loaded. Check FASTA file or matching logic.")
 
     st.markdown("---")
     st.header("🔁 Mutated Suppressor Candidate Scoring")
@@ -67,6 +69,11 @@ if target_aa:
     for entry in tRNAs:
         st.subheader(f"Variants for {entry['name']}")
         features = extract_features_for_variants(entry["sequence"], stop_codon=stop_codon)
+
+        # Apply ViennaRNA folding ΔG
+        for row in features:
+            row["dummy_deltaG"] = get_vienna_dG(row["sequence"]) or round(random.uniform(-30, -10), 2)
+
         df_feat = pd.DataFrame(features)
         df_feat["prediction"] = model.predict(df_feat[["position", "gc_content", "dummy_deltaG"]])
         df_filtered = df_feat[df_feat["prediction"] == 1]
