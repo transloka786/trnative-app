@@ -6,6 +6,7 @@ import os
 from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
 
+st.write("Loaded tRNAs:", tRNAs)
 
 # Load model
 try:
