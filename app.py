@@ -1,12 +1,13 @@
-import os
-st.write("📁 Files available in this repo:", os.listdir())
-
 import streamlit as st
 import pandas as pd
 import joblib
 import requests
+import os
 from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
+
+# ✅ DEBUG: Show available files
+st.write("📁 Files available in this repo:", os.listdir())
 
 # Load model
 try:
