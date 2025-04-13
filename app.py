@@ -46,12 +46,12 @@ if target_aa:
     st.markdown("---")
     st.header(f"🧾 Natural Human tRNAs for {target_aa} (from GtRNAdb)")
     try:
-        tRNAs = load_trna_from_gtrnadb(target_aa)
-        df = pd.DataFrame(tRNAs)
-        st.dataframe(df, use_container_width=True)
-
-        st.markdown("---")
-        st.header("🔁 Mutated Candidate Scoring")
+      tRNAs = load_trna_from_gtrnadb(target_aa)
+st.write(f"✅ Loaded {len(tRNAs)} tRNAs for {target_aa}")
+if len(tRNAs) > 0:
+    st.write(tRNAs[:2])  # Show just first two for preview
+else:
+    st.warning("⚠️ No tRNAs loaded. Check your FASTA file or matching logic.")
 
         for entry in tRNAs[:2]:
             st.subheader(f"Variants for {entry['name']}")
