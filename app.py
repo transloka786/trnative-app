@@ -61,7 +61,7 @@ if target_aa:
 
     st.write(f"✅ Loaded {len(tRNAs)} tRNAs for {target_aa}")
     if len(tRNAs) > 0:
-        st.write(tRNAs[:2])
+        st.write(tRNAs:)
     else:
         st.warning("⚠️ No tRNAs loaded. Check FASTA file or matching logic.")
 
