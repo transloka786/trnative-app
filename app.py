@@ -12,9 +12,6 @@ st.set_page_config(page_title="tRNative tRNA Engine", layout="wide")
 # ✅ OK to follow after set_page_config
 st.write("📁 Files available in this repo:", os.listdir())
 
-# ✅ DEBUG: Show available files
-st.write("📁 Files available in this repo:", os.listdir())
-
 # Load model
 try:
     model = joblib.load("tRNA_structure_model.pkl")
