@@ -1,5 +1,5 @@
 import os
-st.write("Current files in repo:", os.listdir())
+st.write("📁 Files visible in this repo:", os.listdir())
 import streamlit as st
 import pandas as pd
 import joblib
