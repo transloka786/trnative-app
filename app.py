@@ -68,10 +68,13 @@ if target_aa:
             row["cis_penalty"] = round(random.uniform(0.08, 0.25), 2)
             row["domain_fluctuation_score"] = round(random.uniform(0.12, 0.30), 2)
 
-        df_feat = pd.DataFrame(features)
-        df_feat["predicted_readthrough"] = model.predict(df_feat[[
-            "gc_content", "deltaG", "cis_penalty", "domain_fluctuation_score", "similarity_to_known_suppressors"
-        ]])
+      # Rename columns to match model input
+df_feat.rename(columns={"gc_content": "GC_content"}, inplace=True)
+
+df_feat["predicted_readthrough"] = model.predict(df_feat[[
+    "GC_content", "deltaG", "cis_penalty", "domain_fluctuation_score", "similarity_to_known_suppressors"
+]])
+
 
         df_feat["RNAComposer_Link"] = df_feat["sequence"].apply(get_rnacomposer_link)
         df_feat["fold_3D_score"] = df_feat["sequence"].apply(mock_3d_match_score)
