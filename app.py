@@ -64,7 +64,7 @@ if target_aa:
     st.markdown("---")
     st.header("🔁 Mutated Suppressor Candidate Scoring")
 
-    for entry in tRNAs[:2]:
+    for entry in tRNAs:
         st.subheader(f"Variants for {entry['name']}")
         features = extract_features_for_variants(entry["sequence"], stop_codon=stop_codon)
         df_feat = pd.DataFrame(features)
