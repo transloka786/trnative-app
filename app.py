@@ -1,3 +1,6 @@
+import os
+st.write("📁 Files available in this repo:", os.listdir())
+
 import streamlit as st
 import pandas as pd
 import joblib
