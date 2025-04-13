@@ -14,9 +14,7 @@ st.write("📁 Files in repo:", os.listdir())
 # ✅ Load ML model
 try:
     model = joblib.load("tRNA_structure_model.pkl")
-except Exception as e:
-    st.error("❌ Failed to load ML model. Make sure 'tRNA_structure_model.pkl' is in your repo.")
-    st.stop()
+
 
 # ✅ Supported amino acids
 supported_aas = [
