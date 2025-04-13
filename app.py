@@ -85,7 +85,7 @@ if target_aa:
         df_filtered["RNAComposer_Link"] = df_filtered["sequence"].apply(get_rnacomposer_link)
 
         top_candidates = df_filtered.head(10)[[
-            "sequence", "gc_content", "dummy_deltaG",
+            "sequence", "gc_content", "Vienna deltaG",
             "off_target_risk", "fold_3D_score", "RNAComposer_Link"
         ]]
         st.dataframe(top_candidates, use_container_width=True)
