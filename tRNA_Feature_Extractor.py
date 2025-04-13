@@ -1,15 +1,22 @@
-
 import random
 
 def codon_to_anticodon(stop_codon):
-    complement = {'A': 'T', ' 'U': 'A', 'G': 'C', 'C': 'G'}
+    """Convert a stop codon (RNA) to its suppressor anticodon (DNA)"""
+    complement = {'A': 'T', 'U': 'A', 'G': 'C', 'C': 'G'}
     return ''.join(complement[b] for b in stop_codon[::-1])
 
 def modify_anticodon(seq, new_anticodon, anticodon_pos=(34, 37)):
-    # Replace the anticodon region in the tRNA sequence
+    """
+    Replace the anticodon in the tRNA sequence.
+    Assumes anticodon is at position 34-36 (0-based indexing).
+    """
     return seq[:anticodon_pos[0]] + new_anticodon + seq[anticodon_pos[1]:]
 
 def extract_features_for_variants(seq, stop_codon="UGA"):
+    """
+    Build a suppressor tRNA by modifying the anticodon,
+    then simulate single-nucleotide variants and extract features.
+    """
     suppressor_seq = modify_anticodon(seq, codon_to_anticodon(stop_codon))
     variants = []
 
