@@ -1,4 +1,5 @@
-
+import os
+st.write("Current files in repo:", os.listdir())
 import streamlit as st
 import pandas as pd
 import joblib
