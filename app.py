@@ -6,6 +6,12 @@ import os
 from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
 
+# ✅ MUST be the first Streamlit command
+st.set_page_config(page_title="tRNative tRNA Engine", layout="wide")
+
+# ✅ OK to follow after set_page_config
+st.write("📁 Files available in this repo:", os.listdir())
+
 # ✅ DEBUG: Show available files
 st.write("📁 Files available in this repo:", os.listdir())
 
