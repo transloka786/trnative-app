@@ -46,12 +46,18 @@ if target_aa:
     st.markdown("---")
     st.header(f"🧾 Natural Human tRNAs for {target_aa} (from GtRNAdb)")
     try:
-      tRNAs = load_trna_from_gtrnadb(target_aa)
+     try:
+    tRNAs = load_trna_from_gtrnadb(target_aa)
+except Exception as e:
+    st.error(f"❌ Failed to load tRNAs: {e}")
+    tRNAs = []
+
+# ✅ Now outside the try block
 st.write(f"✅ Loaded {len(tRNAs)} tRNAs for {target_aa}")
 if len(tRNAs) > 0:
-    st.write(tRNAs[:2])  # Show just first two for preview
+    st.write(tRNAs[:2])
 else:
-    st.warning("⚠️ No tRNAs loaded. Check your FASTA file or matching logic.")
+    st.warning("⚠️ No tRNAs loaded. Check FASTA file or amino acid match.")
 
         for entry in tRNAs[:2]:
             st.subheader(f"Variants for {entry['name']}")
