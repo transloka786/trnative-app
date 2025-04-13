@@ -3,9 +3,11 @@ import pandas as pd
 import joblib
 import requests
 import os
+import random
 from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
 from vienna_folding import get_vienna_dG
+
 
 # ✅ Must be first Streamlit command
 st.set_page_config(page_title="tRNative tRNA Engine", layout="wide")
