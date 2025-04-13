@@ -11,9 +11,7 @@ from vienna_folding import get_vienna_dG
 st.set_page_config(page_title="tRNative tRNA Engine", layout="wide")
 st.write("📁 Files in repo:", os.listdir())
 
-# ✅ Load ML model
-try:
-    model = joblib.load("tRNA_structure_model.pkl")
+
 
 
 # ✅ Supported amino acids
