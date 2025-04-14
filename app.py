@@ -7,7 +7,6 @@ import os
 import random
 import re
 import json
-import matplotlib.pyplot as plt
 from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
 from vienna_folding import get_vienna_dG
