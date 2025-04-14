@@ -18,10 +18,12 @@ except Exception as e:
     st.error("❌ Failed to load regression model.")
     st.stop()
 
-st.title("🔬 tRNative - Suppressor tRNA Predictor")
-gene = st.text_input("🧬 Gene (e.g., CFTR)")
-mutation = st.text_input("🧬 Mutation (e.g., G542X)")
-stop_codon = st.selectbox("🛑 Stop Codon Introduced", ["UAA", "UAG", "UGA"])
+st.title("🔬 tRNative - Suppressor tRNA Prediction Engine")
+st.header("🧬 Mutation Details")
+gene = st.text_input("Gene (optional)")
+mutation_pos = st.text_input("Nonsense Mutation Position (e.g., G542X)")
+stop_codon = st.selectbox("Stop Codon Introduced", ["UAA", "UAG", "UGA"])
+target_aa = st.selectbox("Amino Acid to Restore", supported_aas)
 
 def infer_aa_from_gene(gene):
     mapping = {
