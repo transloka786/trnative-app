@@ -23,7 +23,7 @@ st.header("🧬 Mutation Details")
 gene = st.text_input("Gene (optional)")
 mutation_pos = st.text_input("Nonsense Mutation Position (e.g., G542X)")
 stop_codon = st.selectbox("Stop Codon Introduced", ["UAA", "UAG", "UGA"])
-target_aa = st.selectbox("Amino Acid to Restore", supported_aas)
+
 
 def infer_aa_from_gene(gene):
     mapping = {
