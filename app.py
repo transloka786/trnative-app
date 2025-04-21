@@ -1,7 +1,6 @@
-# Create new app.py integrating Ensembl API + real MD simulation via cloud API call
 from pathlib import Path
 
-full_auto_app_code = """
+final_full_app_code = """
 import streamlit as st
 import pandas as pd
 import joblib
@@ -12,7 +11,7 @@ from tRNA_Feature_Extractor import extract_features_for_variants
 from GtRNAdb_Loader import load_trna_from_gtrnadb
 from vienna_folding import get_vienna_dG
 
-st.set_page_config(page_title="tRNative - Auto MD + Ensembl CIS", layout="wide")
+st.set_page_config(page_title="tRNative - Final Full Engine", layout="wide")
 
 try:
     model = joblib.load("tRNA_readthrough_model.pkl")
@@ -63,29 +62,21 @@ def compute_real_cis_penalty(annotation, mutation_pos):
         penalty = 0.15
     return round(penalty, 3)
 
-def call_md_api(sequence):
-    # Replace this with your real cloud endpoint
-    try:
-        r = requests.post("https://api.batchmd.openmm.mock/run_rmsf", json={"sequence": sequence}, timeout=30)
-        if r.ok:
-            return r.json()
-    except Exception as e:
-        print("MD API Error:", e)
-    # fallback dummy values
-    return {
-        "rmsf_acceptor": 1.3,
-        "rmsf_dloop": 0.9,
-        "rmsf_anticodon": 2.5,
-        "rmsf_tloop": 1.5
-    }
-
 def get_rnacomposer_link(seq):
     return f"https://rnacomposer.cs.put.poznan.pl/#sequence={seq}"
 
 def mock_3d_match_score(seq):
     return round(sum([1 for m in ["TTCGA", "GGG", "CCG"] if m in seq]) / 3, 2)
 
-st.title("🔬 tRNative – Ensembl-CIS + Real MD Engine")
+def mock_md_rmsf(sequence):
+    return {
+        "rmsf_acceptor": round(1.2 + hash(sequence) % 10 * 0.1, 2),
+        "rmsf_dloop": round(1.0 + hash(sequence[::-1]) % 10 * 0.1, 2),
+        "rmsf_anticodon": round(2.5 + hash(sequence[::2]) % 10 * 0.1, 2),
+        "rmsf_tloop": round(1.4 + hash(sequence[1::3]) % 10 * 0.1, 2)
+    }
+
+st.title("🔬 tRNative – Final Integrated App")
 gene = st.text_input("🧬 Gene Symbol (e.g., CFTR)", value="")
 mutation = st.text_input("🧬 Mutation (e.g., W1282X)", value="")
 stop_codon = st.selectbox("🛑 Stop Codon Introduced", ["UAA", "UAG", "UGA"])
@@ -114,9 +105,9 @@ if gene and mutation and stop_codon and target_aa and mutation_pos:
             row["deltaG"] = get_vienna_dG(row["sequence"]) or round(random.uniform(-30, -10), 2)
             row["similarity_to_known_suppressors"] = round(random.uniform(0.65, 0.98), 2)
             row["cis_penalty"] = compute_real_cis_penalty(annotation, mutation_pos)
-            md_data = call_md_api(row["sequence"])
-            row.update(md_data)
-            row["domain_fluctuation_score"] = round(sum(md_data.values()) / len(md_data), 2)
+            rmsf = mock_md_rmsf(row["sequence"])
+            row.update(rmsf)
+            row["domain_fluctuation_score"] = round(sum(rmsf.values()) / len(rmsf), 2)
             row["RNAComposer_Link"] = get_rnacomposer_link(row["sequence"])
             row["fold_3D_score"] = mock_3d_match_score(row["sequence"])
             all_variants.append(row)
@@ -124,7 +115,7 @@ if gene and mutation and stop_codon and target_aa and mutation_pos:
     df = pd.DataFrame(all_variants)
     df.rename(columns={"gc_content": "GC_content"}, inplace=True)
     df["predicted_readthrough"] = model.predict(df[[
-        "GC_content", "deltaG", "cis_penalty", "domain_fluctuation_score", "similarity_to_known_suppressors"
+        "GC_Content", "deltaG", "cis_penalty", "domain_fluctuation_score", "similarity_to_known_suppressors"
     ]])
 
     top2 = df.sort_values("predicted_readthrough", ascending=False).head(2)
@@ -135,7 +126,7 @@ if gene and mutation and stop_codon and target_aa and mutation_pos:
         st.write(f"**Sequence:** `{row['sequence']}`")
         st.write(f"🎯 **Predicted Readthrough:** `{row['predicted_readthrough']:.3f}`")
         with st.expander("🔬 Score Breakdown"):
-            st.write(f"GC Content: {row['GC_content']}")
+            st.write(f"GC Content: {row['GC_Content']}")
             st.write(f"ΔG: {row['deltaG']} kcal/mol")
             st.write(f"Cis Penalty: {row['cis_penalty']}")
             st.write(f"Similarity to Known Suppressors: {row['similarity_to_known_suppressors']}")
@@ -148,7 +139,7 @@ if gene and mutation and stop_codon and target_aa and mutation_pos:
             row["rmsf_acceptor"], row["rmsf_dloop"], row["rmsf_anticodon"], row["rmsf_tloop"]
         ])
         ax.set_ylabel("RMSF (Å)")
-        ax.set_title("Domain RMSF (from OpenMM MD)")
+        ax.set_title("Domain RMSF (Mocked MD)")
         st.pyplot(fig)
 
     csv = df.sort_values("predicted_readthrough", ascending=False).head(2).to_csv(index=False).encode("utf-8")
@@ -156,6 +147,7 @@ if gene and mutation and stop_codon and target_aa and mutation_pos:
                        file_name=f"{gene}_{mutation}_top2_suppressors.csv", mime="text/csv")
 """
 
-final_app_path = Path("/mnt/data/app_live_ensembl_md.py")
-final_app_path.write_text(full_auto_app_code)
-final_app_path
+final_file = Path("/mnt/data/app_final_full_engine.py")
+final_file.write_text(final_full_app_code)
+final_file
+
