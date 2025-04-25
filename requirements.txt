@@ -3,4 +3,4 @@ pandas
 joblib
 matplotlib
 requests
-biopython
+biopython>=1.81
