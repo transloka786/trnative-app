@@ -4,3 +4,4 @@ joblib
 matplotlib
 requests
 biopython>=1.81
+sklearn
